@@ -16,19 +16,19 @@ function go() {
     //for (let i=0; i<count; i++) {
     //    firstCharSet.add(Object.values(localDataList)[i][0]);
     //}
-    
+
     //开始处理
     const count = Object.keys(localDataList).length;
     //const match = str.match(/\[\[(.*?)\]\]/); //提取str中被[[]]包裹的子字符串 //正则匹配完不知道位置在哪，没法替换原字符串
     const parts = str.split(/\[\[|\]\]/); //找到链接位置
-    if (useSyntax == "F"){ //提前分支，减少判断次数
-        for (let i=1; i<parts.length; i+=2) {
+    if (useSyntax == "F") { //提前分支，减少判断次数
+        for (let i = 1; i < parts.length; i += 2) {
             let nores = false;
             if (parts[i].includes("File:")) {
-                parts[i] = "[[" + parts[i] +"]]";
+                parts[i] = "[[" + parts[i] + "]]";
                 continue;
             }
-            for (let j=0; j<count; j++) {
+            for (let j = 0; j < count; j++) {
                 if (Object.values(localDataList)[j] == parts[i]) {
                     //if (Object.keys(localDataList)[j].includes("planet")) { 可能会把行星际发射器也当星球
                     if (Object.keys(localDataList)[j].split(".")[0] === "planet") {
@@ -43,31 +43,31 @@ function go() {
                         parts[i] = `[[File:${keyPart1}-${keyPart2}-ui.png|${iconSize}px|link=${temp}]][[${temp}]]`;
                     }
                     break;
-                } else if(j==count-1) nores = true;//没匹配到？
+                } else if (j == count - 1) nores = true;//没匹配到？
             }
-            if (nores==true) parts[i] = "[[" + parts[i] +"]]";
+            if (nores == true) parts[i] = "[[" + parts[i] + "]]";
         }
-    } else if(useSyntax == "T") {
-        for (let i=1; i<parts.length; i+=2) {
+    } else if (useSyntax == "T") {
+        for (let i = 1; i < parts.length; i += 2) {
             let nores = false;
             if (parts[i].includes("File:")) {
-                parts[i] = "[[" + parts[i] +"]]";
+                parts[i] = "[[" + parts[i] + "]]";
                 continue;
             }
-            for (let j=0; j<count; j++) {
+            for (let j = 0; j < count; j++) {
                 if (Object.values(localDataList)[j] == parts[i]) {
                     let temp = parts[i];
                     parts[i] = `{{picture|${temp}|size=${iconSize}}}[[${temp}]]`;
                     break;
-                } else if(j==count-1) nores = true;
+                } else if (j == count - 1) nores = true;
             }
-            if (nores==true) parts[i] = "[[" + parts[i] +"]]";
+            if (nores == true) parts[i] = "[[" + parts[i] + "]]";
         }
     }
     stat.innerText = "处理完成！三击下方输入框并按下Ctrl+C（Mac：Command + C）以复制";
     //输出结果
     outputT.value = "";
-    for (let i=0; i<parts.length; i++) {
+    for (let i = 0; i < parts.length; i++) {
         outputT.value += parts[i];
     }
 }

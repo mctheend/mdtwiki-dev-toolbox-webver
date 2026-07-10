@@ -1,3 +1,77 @@
+var useSyntax = "F"; //F替换为File，T用picture模板
+var iconSize = 18;
+
+function go() {
+    //获取HTML元素对象
+    const inputT = document.getElementById('inputT');
+    const outputT = document.getElementById('outputT');
+    const stat = document.getElementById('statusDisplay');
+    //提示处理中
+    stat.innerText = "正在处理中，请稍候...";
+    //获取输入字符串
+    const str = inputT.value;
+    //生成首字索引
+    //const count = Object.keys(localDataList).length;
+    //const firstCharSet = new Set();
+    //for (let i=0; i<count; i++) {
+    //    firstCharSet.add(Object.values(localDataList)[i][0]);
+    //}
+    
+    //开始处理
+    const count = Object.keys(localDataList).length;
+    //const match = str.match(/\[\[(.*?)\]\]/); //提取str中被[[]]包裹的子字符串 //正则匹配完不知道位置在哪，没法替换原字符串
+    const parts = str.split(/\[\[|\]\]/); //找到链接位置
+    if (useSyntax == "F"){ //提前分支，减少判断次数
+        for (let i=1; i<parts.length; i+=2) {
+            let nores = false;
+            if (parts[i].includes("File:")) {
+                parts[i] = "[[" + parts[i] +"]]";
+                continue;
+            }
+            for (let j=0; j<count; j++) {
+                if (Object.values(localDataList)[j] == parts[i]) {
+                    //if (Object.keys(localDataList)[j].includes("planet")) { 可能会把行星际发射器也当星球
+                    if (Object.keys(localDataList)[j].split(".")[0] === "planet") {
+                        let temp = parts[i];
+                        let keyPart1 = Object.keys(localDataList)[j].split(".")[0];//对应键第一段
+                        let keyPart2 = Object.keys(localDataList)[j].split(".")[1];
+                        parts[i] = `[[File:${keyPart1}-${keyPart2}.png|${iconSize}px|link=${temp}]][[${temp}]]`;
+                    } else {
+                        let temp = parts[i];
+                        let keyPart1 = Object.keys(localDataList)[j].split(".")[0];//对应键第一段
+                        let keyPart2 = Object.keys(localDataList)[j].split(".")[1];
+                        parts[i] = `[[File:${keyPart1}-${keyPart2}-ui.png|${iconSize}px|link=${temp}]][[${temp}]]`;
+                    }
+                    break;
+                } else if(j==count-1) nores = true;//没匹配到？
+            }
+            if (nores==true) parts[i] = "[[" + parts[i] +"]]";
+        }
+    } else if(useSyntax == "T") {
+        for (let i=1; i<parts.length; i+=2) {
+            let nores = false;
+            if (parts[i].includes("File:")) {
+                parts[i] = "[[" + parts[i] +"]]";
+                continue;
+            }
+            for (let j=0; j<count; j++) {
+                if (Object.values(localDataList)[j] == parts[i]) {
+                    let temp = parts[i];
+                    parts[i] = `{{picture|${temp}|size=${iconSize}}}[[${temp}]]`;
+                    break;
+                } else if(j==count-1) nores = true;
+            }
+            if (nores==true) parts[i] = "[[" + parts[i] +"]]";
+        }
+    }
+    stat.innerText = "处理完成！三击下方输入框并按下Ctrl+C（Mac：Command + C）以复制";
+    //输出结果
+    outputT.value = "";
+    for (let i=0; i<parts.length; i++) {
+        outputT.value += parts[i];
+    }
+}
+
 const localDataList = {
     "planet.serpulo.name": "塞普罗",
     "planet.erekir.name": "埃里克尔",
@@ -585,67 +659,3 @@ const localDataList = {
     "block.ore-wall-graphite": "石墨（墙）",
     "block.ore-wall-tungsten": "钨（墙）"
 };
-
-var useSyntax = "F"; //F替换为File，T用picture模板
-var iconSize = 18;
-
-function go() {
-    //获取HTML元素对象
-    const inputT = document.getElementById('inputT');
-    const outputT = document.getElementById('outputT');
-    const stat = document.getElementById('statusDisplay');
-    //提示处理中
-    stat.innerText = "正在处理中，请稍候...";
-    //获取输入字符串
-    const str = inputT.value;
-    //生成首字索引
-    //const count = Object.keys(localDataList).length;
-    //const firstCharSet = new Set();
-    //for (let i=0; i<count; i++) {
-    //    firstCharSet.add(Object.values(localDataList)[i][0]);
-    //}
-    
-    //开始处理
-    const count = Object.keys(localDataList).length;
-    //const match = str.match(/\[\[(.*?)\]\]/); //提取str中被[[]]包裹的子字符串 //正则匹配完不知道位置在哪，没法替换原字符串
-    const parts = str.split(/\[\[|\]\]/); //找到链接位置
-    if (useSyntax == "F"){ //提前分支，减少判断次数
-        for (let i=1; i<parts.length; i+=2) {
-            if (parts[i].includes("File:")) continue;
-            for (let j=0; j<count; j++) {
-                if (Object.values(localDataList)[j] == parts[i]) {
-                    //if (Object.keys(localDataList)[j].includes("planet")) { 可能会把行星际发射器也当星球
-                    if (Object.keys(localDataList)[j].split(".")[0] === "planet") {
-                        let temp = parts[i];
-                        let keyPart1 = Object.keys(localDataList)[j].split(".")[0];//对应键第一段
-                        let keyPart2 = Object.keys(localDataList)[j].split(".")[1];
-                        parts[i] = `[[File:${keyPart1}-${keyPart2}.png|${iconSize}px|link=${temp}]][[${temp}]]`;
-                    } else {
-                        let temp = parts[i];
-                        let keyPart1 = Object.keys(localDataList)[j].split(".")[0];//对应键第一段
-                        let keyPart2 = Object.keys(localDataList)[j].split(".")[1];
-                        parts[i] = `[[File:${keyPart1}-${keyPart2}-ui.png|${iconSize}px|link=${temp}]][[${temp}]]`;
-                    }
-                    break;
-                }
-            }
-        }
-    } else if(useSyntax == "T") {
-        for (let i=1; i<parts.length; i+=2) {
-            if (parts[i].includes("File:")) continue;
-            for (let j=0; j<count; j++) {
-                if (Object.values(localDataList)[j] == parts[i]) {
-                    let temp = parts[i];
-                    parts[i] = `{{picture|${temp}|size=${iconSize}}}[[${temp}]]`;
-                    break;
-                }
-            }
-        }
-    }
-    stat.innerText = "处理完成！三击下方输入框并按下Ctrl+C（Mac：Command + C）以复制";
-    //输出结果
-    outputT.innerText = "";
-    for (let i=0; i<parts.length; i++) {
-        outputT.innerText += parts[i];
-    }
-}

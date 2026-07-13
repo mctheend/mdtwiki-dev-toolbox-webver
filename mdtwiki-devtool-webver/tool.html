@@ -12,6 +12,10 @@
     <h1>自动配图标工具</h1>
     <p>请在输入框输入要转换的文本，然后点击“转换”按钮。</p>
     <hr>
+    <button onclick="fmode()" style="height: 32px; font-size: 18px;">[[File:]]模式</button>
+    <button onclick="tmode()" style="height: 32px; font-size: 18px;">{{picture}}模式</button>
+    <div id="display">当前：[[File:]]模式</div>
+    <p>[[File:]]模式原生wiki语法，页面速度更快，{{picture}}模板可读性更高，方便后期修改。<br>注意：仅匹配[[]]链接内内容。</p>
     <p>输入文本</p>
     <!-- <input id="inputF" type="file"></body><br> -->
     <textarea id="inputT" style="resize: vertical; width: 90%; height: 200px"></textarea><br>

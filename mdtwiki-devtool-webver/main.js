@@ -1,5 +1,7 @@
 var useSyntax = "F"; //F替换为File，T用picture模板
 var iconSize = 18;
+function fmode() {useSyntax = "F";document.getElementById('display').innerText = "当前：[[File:]]模式";}
+function tmode() {useSyntax = "T";document.getElementById('display').innerText = "当前：{{picture}}模式";}
 
 function go() {
     //获取HTML元素对象
